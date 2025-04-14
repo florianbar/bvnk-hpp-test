@@ -4,9 +4,12 @@ export default function AmountDetails({
   amount,
   currency,
   acceptanceExpiryDate,
+  onConfirm,
+  isLoading,
 }: AmountDetailsProps) {
   function handleConfirm() {
     console.log("confirm");
+    onConfirm();
   }
 
   return (
@@ -16,8 +19,13 @@ export default function AmountDetails({
       </p>
       <p>Quoted price expires in: {acceptanceExpiryDate}</p>
 
-      <button className="mt-3" type="button" onClick={handleConfirm}>
-        Confirm
+      <button
+        className="mt-3"
+        type="button"
+        onClick={handleConfirm}
+        disabled={isLoading}
+      >
+        {isLoading ? "Confirming..." : "Confirm"}
       </button>
     </>
   );

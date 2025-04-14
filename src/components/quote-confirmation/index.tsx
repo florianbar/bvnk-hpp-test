@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import * as api from "@/utils/api";
 import { QuoteConfirmationProps } from "./types";
@@ -9,46 +10,48 @@ import PayInSelect from "./pay-in-select";
 import AmountDetails from "./amount-details";
 
 export default function QuoteConfirmation({ uuid }: QuoteConfirmationProps) {
-  const {
-    data: quoteData,
-    isPending: quoteIsPending,
-    isError: quoteHasError,
-    error: quoteError,
-  } = useQuery({
+  const router = useRouter();
+
+  const quote = useQuery({
     queryKey: ["quote", uuid],
     queryFn: () => api.fetchQuote(uuid),
     staleTime: Infinity,
   });
 
-  const {
-    mutate: updateQuote,
-    data: updatedData,
-    isPending: updateIsPending,
-    isError: updateHasError,
-    error: updateError,
-  } = useMutation({
+  const update = useMutation({
     mutationFn: (currency: string) => api.updateQuote(uuid, currency),
   });
 
+  const acceptQuote = useMutation({
+    mutationFn: () => api.acceptQuote(uuid),
+    onSuccess: () => {
+      router.push(`/payin/${uuid}/pay`);
+    },
+  });
+
   function handleCurrencyChange(currency: string) {
-    updateQuote(currency);
+    update.mutate(currency);
+  }
+
+  function handleConfirmation() {
+    acceptQuote.mutate();
   }
 
   return (
     <>
       <div className="my-6">
-        {quoteIsPending && <p>Loading quote...</p>}
+        {quote.isPending && <p>Loading quote...</p>}
 
-        {quoteHasError && (
-          <p className="text-red-500">Error: {quoteError.message}</p>
+        {quote.isError && (
+          <p className="text-red-500">Error: {quote.error.message}</p>
         )}
 
-        {quoteData && (
+        {quote.data && (
           <QuoteDetails
-            merchantDisplayName={quoteData.merchantDisplayName}
-            amount={quoteData.displayCurrency.amount}
-            currency={quoteData.displayCurrency.currency}
-            reference={quoteData.reference}
+            merchantDisplayName={quote.data.merchantDisplayName}
+            amount={quote.data.displayCurrency.amount}
+            currency={quote.data.displayCurrency.currency}
+            reference={quote.data.reference}
           />
         )}
       </div>
@@ -56,18 +59,24 @@ export default function QuoteConfirmation({ uuid }: QuoteConfirmationProps) {
       <PayInSelect onChange={handleCurrencyChange} />
 
       <div className="my-6">
-        {updateIsPending && <p>Loading updates...</p>}
+        {update.isPending && <p>Loading updates...</p>}
 
-        {updateHasError && (
-          <p className="text-red-500">Error: {updateError.message}</p>
+        {update.isError && (
+          <p className="text-red-500">Error: {update.error.message}</p>
         )}
 
-        {updatedData && (
+        {update.data && (
           <AmountDetails
-            amount={updatedData.paidCurrency.amount}
-            currency={updatedData.paidCurrency.currency ?? ""}
-            acceptanceExpiryDate={updatedData.acceptanceExpiryDate}
+            amount={update.data.paidCurrency.amount}
+            currency={update.data.paidCurrency.currency ?? ""}
+            acceptanceExpiryDate={update.data.acceptanceExpiryDate}
+            onConfirm={handleConfirmation}
+            isLoading={acceptQuote.isPending}
           />
+        )}
+
+        {acceptQuote.isError && (
+          <p className="text-red-500">Error: {acceptQuote.error?.message}</p>
         )}
       </div>
     </>

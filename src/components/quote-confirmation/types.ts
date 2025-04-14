@@ -17,4 +17,6 @@ export interface AmountDetailsProps {
   amount: number;
   currency: string;
   acceptanceExpiryDate: number;
+  onConfirm: () => void;
+  isLoading: boolean;
 }
