@@ -1,15 +1,30 @@
-import { AmountDetailsProps } from "./types";
+"use client";
 
-export default function AmountDetails({
-  amount,
-  currency,
-  acceptanceExpiryDate,
-  onConfirm,
-  isLoading,
-}: AmountDetailsProps) {
+import useExpiryCountdown from "@/hooks/useExpiryCountdown";
+
+interface AmountDetailsProps {
+  amount: number;
+  currency: string;
+  acceptanceExpiryDate: number;
+  isUpdating: boolean;
+  onSubmit: () => void;
+  isSubmitting: boolean;
+}
+
+export default function AmountDetails(props: AmountDetailsProps) {
+  const {
+    amount,
+    currency,
+    acceptanceExpiryDate,
+    // isUpdating,
+    onSubmit,
+    isSubmitting,
+  } = props;
+
+  const { timeRemaining } = useExpiryCountdown(acceptanceExpiryDate);
+
   function handleConfirm() {
-    console.log("confirm");
-    onConfirm();
+    onSubmit();
   }
 
   return (
@@ -17,15 +32,15 @@ export default function AmountDetails({
       <p>
         Amount due: {amount} {currency}
       </p>
-      <p>Quoted price expires in: {acceptanceExpiryDate}</p>
+      <p>Quoted price expires in: {Math.floor(timeRemaining / 1000)}</p>
 
       <button
         className="mt-3"
         type="button"
         onClick={handleConfirm}
-        disabled={isLoading}
+        disabled={isSubmitting}
       >
-        {isLoading ? "Confirming..." : "Confirm"}
+        {isSubmitting ? "Confirming..." : "Confirm"}
       </button>
     </>
   );

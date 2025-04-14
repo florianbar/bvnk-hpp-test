@@ -3,7 +3,10 @@
 import { useState } from "react";
 
 import { CURRENCIES_MOCK } from "@/data/payin";
-import { PayInSelectProps } from "./types";
+
+interface PayInSelectProps {
+  onChange: (currency: string) => void;
+}
 
 export default function PayInSelect({ onChange }: PayInSelectProps) {
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
@@ -18,7 +21,9 @@ export default function PayInSelect({ onChange }: PayInSelectProps) {
     <>
       <label>Pay with</label>
       <select onChange={handleChange} value={selectedCurrency || ""}>
-        <option value="">Select Currency</option>
+        <option value="" disabled>
+          Select Currency
+        </option>
 
         {CURRENCIES_MOCK.map((currency) => (
           <option key={currency.value} value={currency.value}>
