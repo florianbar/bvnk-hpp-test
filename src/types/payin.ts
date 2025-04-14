@@ -11,7 +11,7 @@ export interface PayinSummaryResponse {
   dateCreated: number;
   expiryDate: number;
   quoteExpiryDate: null;
-  acceptanceExpiryDate: null;
+  acceptanceExpiryDate: number;
   quoteStatus: string;
   reference: string;
   type: string;
@@ -28,7 +28,7 @@ export interface PayinSummaryResponse {
     actual: number;
   };
   paidCurrency: {
-    currency: null;
+    currency: string | null;
     amount: number;
     actual: number;
   };
