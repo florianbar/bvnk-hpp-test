@@ -41,3 +41,24 @@ export async function updateQuote(
 
   return await response.json();
 }
+
+export async function acceptQuote(uuid: string): Promise<PayinSummaryResponse> {
+  let url = process.env.NEXT_PUBLIC_BVNK_API_URL || "";
+  url += `/pay/${uuid}/accept/summary`;
+
+  const body = JSON.stringify({ successUrl: "no_url" });
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to accept quote");
+  }
+
+  return await response.json();
+}
