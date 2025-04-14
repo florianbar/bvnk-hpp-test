@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import QuoteDetails from "./quote-details";
 import PayInSelect from "./pay-in-select";
 import AmountDetails from "./amount-details";
@@ -10,6 +13,8 @@ interface QuoteConfirmationProps {
 }
 
 export default function QuoteConfirmation({ uuid }: QuoteConfirmationProps) {
+  const router = useRouter();
+
   const {
     quoteDetails,
     quoteAmountDetails,
@@ -26,6 +31,12 @@ export default function QuoteConfirmation({ uuid }: QuoteConfirmationProps) {
   function handleQuoteConfirmation() {
     acceptQuote.mutate();
   }
+
+  useEffect(() => {
+    if (acceptQuote.isSuccess) {
+      router.push(`/payin/${uuid}/pay`);
+    }
+  }, [acceptQuote.isSuccess, router, uuid]);
 
   return (
     <>

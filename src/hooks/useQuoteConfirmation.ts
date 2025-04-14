@@ -7,7 +7,6 @@ import {
   UseQueryResult,
   UseMutationResult,
 } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 
 import * as api from "@/utils/api";
 import { PayinSummaryResponse } from "@/types/payin";
@@ -37,8 +36,6 @@ interface UseQuoteConfirmationResult {
 export default function useQuoteConfirmation(
   uuid: string
 ): UseQuoteConfirmationResult {
-  const router = useRouter();
-
   function updateQuoteAmountDetails(data: PayinSummaryResponse) {
     setQuoteAmountDetails({
       amount: data.paidCurrency.amount,
@@ -65,9 +62,6 @@ export default function useQuoteConfirmation(
 
   const acceptQuote = useMutation({
     mutationFn: () => api.acceptQuote(uuid),
-    onSuccess: () => {
-      router.push(`/payin/${uuid}/pay`);
-    },
   });
 
   const quoteDetails = useMemo<QuoteDetails | null>(() => {
