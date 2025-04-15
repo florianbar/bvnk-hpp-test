@@ -21,7 +21,12 @@ export default function CopyLink({ link }: { link: string }) {
   }
 
   return (
-    <button type="button" onClick={copyLinkHandler} disabled={copied}>
+    <button
+      type="button"
+      onClick={copyLinkHandler}
+      disabled={copied}
+      className="text-bvnk-primary"
+    >
       {copied ? "Copied" : "Copy"}
     </button>
   );
