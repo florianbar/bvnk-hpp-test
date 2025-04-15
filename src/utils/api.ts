@@ -2,7 +2,7 @@ import { PayinSummaryResponse } from "@/types/payin";
 
 export async function fetchQuote(uuid: string): Promise<PayinSummaryResponse> {
   let url = process.env.NEXT_PUBLIC_BVNK_API_URL || "";
-  url += `/pay/${uuid}/summary`;
+  url += `/${uuid}/summary`;
 
   const response = await fetch(url, {
     method: "GET",
@@ -22,7 +22,7 @@ export async function refreshQuote(
   uuid: string
 ): Promise<PayinSummaryResponse> {
   let url = process.env.NEXT_PUBLIC_BVNK_API_URL || "";
-  url += `/pay/${uuid}/summary`;
+  url += `/${uuid}/summary`;
 
   const response = await fetch(url, {
     method: "PUT",
@@ -43,7 +43,7 @@ export async function updateQuote(
   currency: string
 ): Promise<PayinSummaryResponse> {
   let url = process.env.NEXT_PUBLIC_BVNK_API_URL || "";
-  url += `/pay/${uuid}/update/summary`;
+  url += `/${uuid}/update/summary`;
 
   const body = JSON.stringify({ currency, payInMethod: "crypto" });
 
@@ -64,7 +64,7 @@ export async function updateQuote(
 
 export async function acceptQuote(uuid: string): Promise<PayinSummaryResponse> {
   let url = process.env.NEXT_PUBLIC_BVNK_API_URL || "";
-  url += `/pay/${uuid}/accept/summary`;
+  url += `/${uuid}/accept/summary`;
 
   const body = JSON.stringify({ successUrl: "no_url" });
 
