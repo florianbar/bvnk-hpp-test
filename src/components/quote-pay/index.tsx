@@ -1,20 +1,31 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { PayinSummaryResponse } from "@/types/payin";
 import CopyLink from "../ui/copy-link";
 import { getMaskedWalletAddress } from "@/utils/wallet-address";
 import DetailList from "../ui/detail-list";
+import useExpiry from "@/hooks/useExpiry";
 
 interface QuotePayProps {
+  uuid: string;
   quote: PayinSummaryResponse;
 }
 
-export default function QuotePay({ quote }: QuotePayProps) {
+export default function QuotePay({ uuid, quote }: QuotePayProps) {
   const {
     address: { address },
     paidCurrency: { amount, currency },
     expiryDate,
   } = quote;
+
+  const router = useRouter();
+
+  // Redirect to expired page if quote has expired
+  useExpiry(quote.expiryDate, () => {
+    router.push(`/payin/${uuid}/expired`);
+  });
 
   const amountDue = `${amount} ${currency}`;
 

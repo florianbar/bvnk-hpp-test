@@ -19,7 +19,7 @@ export default async function PayQuotePage({ params }: PayinPageProps) {
             ]
           }`}
         >
-          <QuotePay quote={quote} />
+          <QuotePay uuid={uuid} quote={quote} />
         </Container>
       )}
     </QuotePageHandler>
