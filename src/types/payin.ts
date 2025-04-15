@@ -44,7 +44,7 @@ export interface PayinSummaryResponse {
   };
   displayRate: null;
   exchangeRate: null;
-  address: null;
+  address: { address: string };
   returnUrl: string;
   redirectUrl: string;
   transactions: unknown[];
