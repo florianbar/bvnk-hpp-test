@@ -20,7 +20,7 @@ export default function QuotePay({ quote }: QuotePayProps) {
 
   return (
     <>
-      <p className="mt-8 mb-10 px-[6rem] text-center">
+      <p className="mt-8 mb-10 px-[4rem] text-center">
         To complete this payment send the amount due to the {currency} address
         provided below.
       </p>

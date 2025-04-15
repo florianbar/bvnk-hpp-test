@@ -52,7 +52,7 @@ export default function QuoteConfirmation({
 
   return (
     <>
-      <div className="mb-6">
+      <div className="mb-7">
         {initialQuote && (
           <QuoteDetails
             amount={initialQuote.displayCurrency.amount}

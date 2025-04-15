@@ -11,7 +11,7 @@ export default function QuoteDetails({
 }: QuoteDetailsProps) {
   return (
     <div className="text-center">
-      <div className="mb-6 text-bvnk-black font-bold text-4xl">
+      <div className="mb-7 text-bvnk-black font-semibold text-4xl">
         {amount} <span className="text-2xl">{currency}</span>
       </div>
       <p>
