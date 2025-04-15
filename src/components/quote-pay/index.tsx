@@ -20,8 +20,7 @@ export default function QuotePay({ quote }: QuotePayProps) {
 
   return (
     <>
-      <h1>Pay with {currency}</h1>
-      <p className="my-3">
+      <p className="mt-8 mb-10 px-[6rem] text-center">
         To complete this payment send the amount due to the {currency} address
         provided below.
       </p>
@@ -49,7 +48,7 @@ export default function QuotePay({ quote }: QuotePayProps) {
         showBottomBorder={false}
       />
 
-      <div className="my-3">
+      <div className="my-12">
         QR code
         {address}
       </div>

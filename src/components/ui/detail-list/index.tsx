@@ -14,7 +14,7 @@ export default function DetailList({
 }: DetailListProps) {
   return (
     <div
-      className={`w-full bg-white border-[#E3E8EE] ${
+      className={`w-full my-3 bg-white border-[#E3E8EE] ${
         showBottomBorder ? "border-b" : ""
       }`}
     >
@@ -24,7 +24,7 @@ export default function DetailList({
           className="flex justify-between border-t border-[#E3E8EE] py-3"
         >
           <div className="text-bvnk-gray">{key}</div>
-          <div className="text-bvnk-black">{value}</div>
+          <div className="text-bvnk-black font-medium">{value}</div>
         </div>
       ))}
     </div>

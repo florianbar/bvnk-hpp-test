@@ -1,23 +1,23 @@
 interface QuoteDetailsProps {
-  merchantDisplayName: string;
   amount: number;
   currency: string;
   reference: string;
 }
 
 export default function QuoteDetails({
-  merchantDisplayName,
   amount,
   currency,
   reference,
 }: QuoteDetailsProps) {
   return (
-    <>
-      <p>{merchantDisplayName}</p>
+    <div className="text-center">
+      <div className="mb-6 text-bvnk-black font-bold text-4xl">
+        {amount} <span className="text-2xl">{currency}</span>
+      </div>
       <p>
-        {amount} {currency}
+        For reference number:{" "}
+        <span className="text-bvnk-black font-medium">{reference}</span>
       </p>
-      <p>For reference number: {reference}</p>
-    </>
+    </div>
   );
 }

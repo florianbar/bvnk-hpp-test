@@ -52,10 +52,9 @@ export default function QuoteConfirmation({
 
   return (
     <>
-      <div className="my-6">
+      <div className="mb-6">
         {initialQuote && (
           <QuoteDetails
-            merchantDisplayName={initialQuote.merchantDisplayName}
             amount={initialQuote.displayCurrency.amount}
             currency={initialQuote.displayCurrency.currency}
             reference={initialQuote.reference}
@@ -65,7 +64,7 @@ export default function QuoteConfirmation({
 
       <PayInSelect onChange={handleCurrencyChange} />
 
-      <div className="my-6">
+      <div className="mt-6">
         {(updateQuote.isPending || refreshQuote.isPending) && (
           <p>Updating Quote...</p>
         )}

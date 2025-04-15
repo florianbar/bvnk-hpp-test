@@ -31,24 +31,24 @@ export default function AmountDetails(props: AmountDetailsProps) {
 
   return (
     <>
-      <DetailList
-        data={[
-          {
-            key: "Amount due",
-            value: `${amount} ${currency}`,
-          },
-          {
-            key: "Quoted price expires in",
-            value: `${Math.floor(timeRemaining / 1000)}`,
-          },
-        ]}
-      />
-
-      <div className="mt-3">
-        <Button onClick={handleConfirm} disabled={isSubmitting}>
-          {isSubmitting ? "Processing..." : "Confirm"}
-        </Button>
+      <div className="mb-6">
+        <DetailList
+          data={[
+            {
+              key: "Amount due",
+              value: `${amount} ${currency}`,
+            },
+            {
+              key: "Quoted price expires in",
+              value: `${Math.floor(timeRemaining / 1000)}`,
+            },
+          ]}
+        />
       </div>
+
+      <Button onClick={handleConfirm} disabled={isSubmitting}>
+        {isSubmitting ? "Processing..." : "Confirm"}
+      </Button>
     </>
   );
 }
