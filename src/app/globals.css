@@ -6,12 +6,14 @@
   --bvnk-primary: #3f53dd;
   --bvnk-black: #0a1628;
   --bvnk-gray: #556877;
+  --bvnk-danger: #ff785f;
 }
 
 @theme {
   --color-bvnk-primary: var(--bvnk-primary);
   --color-bvnk-black: var(--bvnk-black);
   --color-bvnk-gray: var(--bvnk-gray);
+  --color-bvnk-danger: var(--bvnk-danger);
 }
 
 html {
