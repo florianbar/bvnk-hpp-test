@@ -3,6 +3,7 @@
 import { PayinSummaryResponse } from "@/types/payin";
 import CopyLink from "../ui/copy-link";
 import { getMaskedWalletAddress } from "@/utils/wallet-address";
+import DetailList from "../ui/detail-list";
 
 interface QuotePayProps {
   quote: PayinSummaryResponse;
@@ -24,21 +25,37 @@ export default function QuotePay({ quote }: QuotePayProps) {
         To complete this payment send the amount due to the {currency} address
         provided below.
       </p>
-      <div>
-        Amount due: {amountDue} <CopyLink link={amountDue} />
-      </div>
-      <div>
-        {currency} address: {getMaskedWalletAddress(address)}{" "}
-        <CopyLink link={address} />
-      </div>
+
+      <DetailList
+        data={[
+          {
+            key: "Amount due",
+            value: (
+              <div className="space-x-3">
+                <span>{amountDue}</span> <CopyLink link={amountDue} />
+              </div>
+            ),
+          },
+          {
+            key: `${currency} address`,
+            value: (
+              <div className="space-x-3">
+                <span>{getMaskedWalletAddress(address)}</span>{" "}
+                <CopyLink link={address} />
+              </div>
+            ),
+          },
+        ]}
+      />
+
       <div className="my-3">
         QR code
         {address}
       </div>
-      <div>
-        Time left to pay
-        {expiryDate}
-      </div>
+
+      <DetailList
+        data={[{ key: "Time left to pay", value: `${expiryDate}` }]}
+      />
     </>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import useExpiryCountdown from "@/hooks/useExpiryCountdown";
+import DetailList from "../ui/detail-list";
+import Button from "@/components/ui/button";
 
 interface AmountDetailsProps {
   amount: number;
@@ -29,19 +31,24 @@ export default function AmountDetails(props: AmountDetailsProps) {
 
   return (
     <>
-      <p>
-        Amount due: {amount} {currency}
-      </p>
-      <p>Quoted price expires in: {Math.floor(timeRemaining / 1000)}</p>
+      <DetailList
+        data={[
+          {
+            key: "Amount due",
+            value: `${amount} ${currency}`,
+          },
+          {
+            key: "Quoted price expires in",
+            value: `${Math.floor(timeRemaining / 1000)}`,
+          },
+        ]}
+      />
 
-      <button
-        className="mt-3"
-        type="button"
-        onClick={handleConfirm}
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Processing..." : "Confirm"}
-      </button>
+      <div className="mt-3">
+        <Button onClick={handleConfirm} disabled={isSubmitting}>
+          {isSubmitting ? "Processing..." : "Confirm"}
+        </Button>
+      </div>
     </>
   );
 }
