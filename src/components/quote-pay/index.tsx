@@ -53,9 +53,11 @@ export default function QuotePay({ quote }: QuotePayProps) {
         {address}
       </div>
 
-      <DetailList
-        data={[{ key: "Time left to pay", value: `${expiryDate}` }]}
-      />
+      <div className="-mb-3">
+        <DetailList
+          data={[{ key: "Time left to pay", value: `${expiryDate}` }]}
+        />
+      </div>
     </>
   );
 }
