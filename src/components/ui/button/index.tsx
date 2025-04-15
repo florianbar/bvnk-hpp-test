@@ -11,7 +11,7 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       type={type}
-      className={`w-full px-4 py-2 rounded-md bg-bvnk-primary text-white ${
+      className={`w-full px-4 py-2.5 rounded-md bg-bvnk-primary text-white ${
         disabled ? "opacity-50" : "hover:opacity-90 cursor-pointer"
       }`}
       onClick={() => onClick?.()}
