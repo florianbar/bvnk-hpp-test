@@ -14,14 +14,14 @@ export default function DetailList({
 }: DetailListProps) {
   return (
     <div
-      className={`w-full my-3 bg-white border-[#E3E8EE] ${
+      className={`w-full my-3 bg-white border-bvnk-light ${
         showBottomBorder ? "border-b" : ""
       }`}
     >
       {data.map(({ key, value }: Detail, index: number) => (
         <div
           key={index}
-          className="flex justify-between border-t border-[#E3E8EE] py-3"
+          className="flex justify-between border-t border-bvnk-light py-4"
         >
           <div className="text-bvnk-gray">{key}</div>
           <div className="text-bvnk-black font-medium">{value}</div>

@@ -2,10 +2,10 @@
 
 :root {
   --background: #ebedf3;
-
   --bvnk-primary: #3f53dd;
   --bvnk-black: #0a1628;
   --bvnk-gray: #556877;
+  --bvnk-light: #e3e8ee;
   --bvnk-danger: #ff785f;
 }
 
@@ -13,6 +13,7 @@
   --color-bvnk-primary: var(--bvnk-primary);
   --color-bvnk-black: var(--bvnk-black);
   --color-bvnk-gray: var(--bvnk-gray);
+  --color-bvnk-light: var(--bvnk-light);
   --color-bvnk-danger: var(--bvnk-danger);
 }
 
