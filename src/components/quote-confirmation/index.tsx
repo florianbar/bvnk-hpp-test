@@ -10,6 +10,7 @@ import useQuoteConfirmation from "@/hooks/useQuoteConfirmation";
 import { PayinSummaryResponse } from "@/types/payin";
 import ErrorText from "@/components/ui/error-text";
 import useExpiry from "@/hooks/useExpiry";
+import { getPayinRoutes } from "@/utils/routes";
 
 interface QuoteConfirmationProps {
   uuid: string;
@@ -35,13 +36,13 @@ export default function QuoteConfirmation({
 
   // Redirect to expired page if quote has expired
   useExpiry(initialQuote.expiryDate, () => {
-    router.push(`/payin/${uuid}/expired`);
+    router.push(getPayinRoutes.expired(uuid));
   });
 
   // Redirect to payment page if quote has been accepted
   useEffect(() => {
     if (acceptQuote.isSuccess) {
-      router.push(`/payin/${uuid}/pay`);
+      router.push(getPayinRoutes.pay(uuid));
     }
   }, [acceptQuote.isSuccess, router, uuid]);
 

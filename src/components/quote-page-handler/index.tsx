@@ -6,6 +6,7 @@ import Error from "@/app/error";
 import { fetchQuote } from "@/utils/api";
 import { PayinSummaryResponse } from "@/types/payin";
 import { QUOTE_STATUS } from "@/constants/payin";
+import { getPayinRoutes } from "@/utils/routes";
 
 interface QuotePageHandlerProps {
   currentUrl: string;
@@ -37,9 +38,9 @@ export default async function QuotePageHandler(
   // Quote is not expired
   if (quote.expiryDate > Date.now()) {
     const STATUS_URLS = {
-      [QUOTE_STATUS.TEMPLATE]: `/payin/${uuid}`,
-      [QUOTE_STATUS.PENDING]: `/payin/${uuid}`,
-      [QUOTE_STATUS.ACCEPTED]: `/payin/${uuid}/pay`,
+      [QUOTE_STATUS.TEMPLATE]: getPayinRoutes.confirm(uuid),
+      [QUOTE_STATUS.PENDING]: getPayinRoutes.confirm(uuid),
+      [QUOTE_STATUS.ACCEPTED]: getPayinRoutes.pay(uuid),
     };
 
     // Redirect to correct page based on quote status
@@ -48,7 +49,7 @@ export default async function QuotePageHandler(
       return redirect(expectedUrl);
     }
   } else {
-    const expiredUrl = `/payin/${uuid}/expired`;
+    const expiredUrl = getPayinRoutes.expired(uuid);
 
     if (currentUrl !== expiredUrl) {
       return redirect(expiredUrl);

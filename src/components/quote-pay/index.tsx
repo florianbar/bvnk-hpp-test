@@ -7,6 +7,7 @@ import CopyLink from "../ui/copy-link";
 import { getMaskedWalletAddress } from "@/utils/wallet-address";
 import DetailList from "../ui/detail-list";
 import useExpiry from "@/hooks/useExpiry";
+import { getPayinRoutes } from "@/utils/routes";
 
 interface QuotePayProps {
   uuid: string;
@@ -24,7 +25,7 @@ export default function QuotePay({ uuid, quote }: QuotePayProps) {
 
   // Redirect to expired page if quote has expired
   useExpiry(quote.expiryDate, () => {
-    router.push(`/payin/${uuid}/expired`);
+    router.push(getPayinRoutes.expired(uuid));
   });
 
   const amountDue = `${amount} ${currency}`;
