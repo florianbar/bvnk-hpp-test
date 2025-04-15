@@ -11,7 +11,7 @@ export default async function AcceptQuotePage({ params }: PayinPageProps) {
   return (
     <QuotePageHandler currentUrl={`/payin/${uuid}`} uuid={uuid}>
       {(quote: PayinSummaryResponse) => (
-        <Container>
+        <Container title={quote.merchantDisplayName}>
           <QuoteConfirmation uuid={uuid} initialQuote={quote} />
         </Container>
       )}
