@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 
+import Error from "@/app/error";
 import { fetchQuote } from "@/utils/api";
 import { PayinSummaryResponse } from "@/types/payin";
 import { QUOTE_STATUS } from "@/constants/payin";
@@ -28,10 +29,9 @@ export default async function QuotePageHandler(
     hasError = true;
   }
 
-  // Handle error appropriately
-  // TODO: make error page
+  // Handle error
   if (hasError || !quote) {
-    return <div>Error fetching quote</div>;
+    return <Error />;
   }
 
   // Quote is not expired
