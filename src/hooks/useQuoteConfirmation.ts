@@ -22,6 +22,9 @@ interface UseQuoteConfirmationResult {
 export default function useQuoteConfirmation(
   uuid: string
 ): UseQuoteConfirmationResult {
+  const [quoteAmountDetails, setQuoteAmountDetails] =
+    useState<QuoteAmountDetails | null>(null);
+
   function updateQuoteAmountDetails(data: PayinSummaryResponse) {
     setQuoteAmountDetails({
       amount: data.paidCurrency.amount,
@@ -43,9 +46,6 @@ export default function useQuoteConfirmation(
   const acceptQuote = useMutation({
     mutationFn: () => api.acceptQuote(uuid),
   });
-
-  const [quoteAmountDetails, setQuoteAmountDetails] =
-    useState<QuoteAmountDetails | null>(null);
 
   return {
     quoteAmountDetails,
