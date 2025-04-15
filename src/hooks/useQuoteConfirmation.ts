@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 
 import * as api from "@/utils/api";
@@ -46,19 +46,6 @@ export default function useQuoteConfirmation(
 
   const [quoteAmountDetails, setQuoteAmountDetails] =
     useState<QuoteAmountDetails | null>(null);
-
-  useEffect(() => {
-    const now = Date.now();
-
-    if (quoteAmountDetails && quoteAmountDetails.acceptanceExpiryDate > now) {
-      const difference = quoteAmountDetails.acceptanceExpiryDate - now;
-      const delay = Math.floor(difference);
-
-      setTimeout(() => {
-        refreshQuote.mutate();
-      }, delay);
-    }
-  }, [quoteAmountDetails, refreshQuote]);
 
   return {
     quoteAmountDetails,

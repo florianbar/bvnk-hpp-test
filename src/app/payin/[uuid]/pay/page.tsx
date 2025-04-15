@@ -1,12 +1,19 @@
-import { PayinPageProps } from "@/types/payin";
+"use server";
 
-export default function PayQuotePage({ params }: PayinPageProps) {
-  const { uuid } = params;
+import { PayinPageProps, PayinSummaryResponse } from "@/types/payin";
+import QuotePageHandler from "@/components/quote-page-handler";
+
+export default async function PayQuotePage({ params }: PayinPageProps) {
+  const { uuid } = await params;
 
   return (
-    <div>
-      <h1>Pay Quote</h1>
-      <p>Quote ID: {uuid}</p>
-    </div>
+    <QuotePageHandler currentUrl={`/payin/${uuid}/pay`} uuid={uuid}>
+      {(quote: PayinSummaryResponse) => (
+        <div>
+          <h1>Pay Quote {quote.quoteStatus}</h1>
+          <p>Quote ID: {uuid}</p>
+        </div>
+      )}
+    </QuotePageHandler>
   );
 }

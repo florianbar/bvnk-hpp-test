@@ -37,6 +37,19 @@ export default function QuoteConfirmation({
     }
   }, [acceptQuote.isSuccess, router, uuid]);
 
+  // useEffect(() => {
+  //   const now = Date.now();
+
+  //   if (quoteAmountDetails && quoteAmountDetails.acceptanceExpiryDate > now) {
+  //     const difference = quoteAmountDetails.acceptanceExpiryDate - now;
+  //     const delay = Math.floor(difference);
+
+  //     setTimeout(() => {
+  //       refreshQuote.mutate();
+  //     }, delay);
+  //   }
+  // }, [quoteAmountDetails, refreshQuote]);
+
   return (
     <>
       <div className="my-6">

@@ -1,0 +1,5 @@
+export const QUOTE_STATUS = {
+  TEMPLATE: "TEMPLATE",
+  PENDING: "PENDING",
+  ACCEPTED: "ACCEPTED",
+};

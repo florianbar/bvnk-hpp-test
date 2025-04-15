@@ -1,37 +1,17 @@
-import { redirect } from "next/navigation";
+"use server";
 
-import { PayinPageProps } from "@/types/payin";
+import { PayinPageProps, PayinSummaryResponse } from "@/types/payin";
+import QuotePageHandler from "@/components/quote-page-handler";
 import QuoteConfirmation from "@/components/quote-confirmation";
-import { fetchQuote } from "@/utils/api";
 
 export default async function AcceptQuotePage({ params }: PayinPageProps) {
-  const { uuid } = params;
+  const { uuid } = await params;
 
-  let quote;
-  let quoteStatus;
-  let quoteExpiryDate;
-  let hasError = false;
-
-  try {
-    quote = await fetchQuote(uuid);
-    quoteExpiryDate = quote.expiryDate;
-  } catch (error: unknown) {
-    console.log("error: ", error);
-    hasError = true;
-  }
-
-  if (hasError) {
-    // TODO: make error page
-    return <div>Error fetching quote</div>;
-  }
-
-  if (quoteExpiryDate && quoteExpiryDate <= Date.now()) {
-    return redirect(`/payin/${uuid}/expired`);
-  }
-
-  if (quoteStatus) {
-    // TODO: redirect to pay page if status is not pending
-  }
-
-  return <QuoteConfirmation uuid={uuid} initialQuote={quote} />;
+  return (
+    <QuotePageHandler currentUrl={`/payin/${uuid}`} uuid={uuid}>
+      {(quote: PayinSummaryResponse) => (
+        <QuoteConfirmation uuid={uuid} initialQuote={quote} />
+      )}
+    </QuotePageHandler>
+  );
 }
