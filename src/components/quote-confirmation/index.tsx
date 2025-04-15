@@ -7,22 +7,21 @@ import QuoteDetails from "./quote-details";
 import PayInSelect from "./pay-in-select";
 import AmountDetails from "./amount-details";
 import useQuoteConfirmation from "@/hooks/useQuoteConfirmation";
+import { PayinSummaryResponse } from "@/types/payin";
 
 interface QuoteConfirmationProps {
   uuid: string;
+  initialQuote?: PayinSummaryResponse;
 }
 
-export default function QuoteConfirmation({ uuid }: QuoteConfirmationProps) {
+export default function QuoteConfirmation({
+  uuid,
+  initialQuote,
+}: QuoteConfirmationProps) {
   const router = useRouter();
 
-  const {
-    quoteDetails,
-    quoteAmountDetails,
-    fetchQuote,
-    updateQuote,
-    refreshQuote,
-    acceptQuote,
-  } = useQuoteConfirmation(uuid);
+  const { quoteAmountDetails, updateQuote, refreshQuote, acceptQuote } =
+    useQuoteConfirmation(uuid);
 
   function handleCurrencyChange(currency: string) {
     updateQuote.mutate(currency);
@@ -41,20 +40,12 @@ export default function QuoteConfirmation({ uuid }: QuoteConfirmationProps) {
   return (
     <>
       <div className="my-6">
-        {fetchQuote.isPending && <p>Fetching Quote...</p>}
-
-        {fetchQuote.isError && (
-          <p className="text-red-500">
-            Fetching Quote Error: {fetchQuote.error.message}
-          </p>
-        )}
-
-        {quoteDetails && (
+        {initialQuote && (
           <QuoteDetails
-            merchantDisplayName={quoteDetails.merchantDisplayName}
-            amount={quoteDetails.amount}
-            currency={quoteDetails.currency}
-            reference={quoteDetails.reference}
+            merchantDisplayName={initialQuote.merchantDisplayName}
+            amount={initialQuote.displayCurrency.amount}
+            currency={initialQuote.displayCurrency.currency}
+            reference={initialQuote.reference}
           />
         )}
       </div>

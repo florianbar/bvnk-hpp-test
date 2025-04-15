@@ -1,22 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  useQuery,
-  useMutation,
-  UseQueryResult,
-  UseMutationResult,
-} from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useMutation, UseMutationResult } from "@tanstack/react-query";
 
 import * as api from "@/utils/api";
 import { PayinSummaryResponse } from "@/types/payin";
-
-interface QuoteDetails {
-  merchantDisplayName: string;
-  amount: number;
-  currency: string;
-  reference: string;
-}
 
 interface QuoteAmountDetails {
   amount: number;
@@ -25,9 +13,7 @@ interface QuoteAmountDetails {
 }
 
 interface UseQuoteConfirmationResult {
-  quoteDetails: QuoteDetails | null;
   quoteAmountDetails: QuoteAmountDetails | null;
-  fetchQuote: UseQueryResult<PayinSummaryResponse, Error>;
   updateQuote: UseMutationResult<PayinSummaryResponse, Error, string>;
   refreshQuote: UseMutationResult<PayinSummaryResponse, Error, void>;
   acceptQuote: UseMutationResult<PayinSummaryResponse, Error, void>;
@@ -44,12 +30,6 @@ export default function useQuoteConfirmation(
     });
   }
 
-  const fetchQuote = useQuery({
-    queryKey: ["quote", uuid],
-    queryFn: () => api.fetchQuote(uuid),
-    staleTime: Infinity,
-  });
-
   const updateQuote = useMutation({
     mutationFn: (currency: string) => api.updateQuote(uuid, currency),
     onSuccess: updateQuoteAmountDetails,
@@ -63,23 +43,6 @@ export default function useQuoteConfirmation(
   const acceptQuote = useMutation({
     mutationFn: () => api.acceptQuote(uuid),
   });
-
-  const quoteDetails = useMemo<QuoteDetails | null>(() => {
-    if (!fetchQuote.data) return null;
-
-    const {
-      merchantDisplayName,
-      displayCurrency: { amount, currency },
-      reference,
-    } = fetchQuote.data;
-
-    return {
-      merchantDisplayName,
-      amount,
-      currency,
-      reference,
-    };
-  }, [fetchQuote]);
 
   const [quoteAmountDetails, setQuoteAmountDetails] =
     useState<QuoteAmountDetails | null>(null);
@@ -98,9 +61,7 @@ export default function useQuoteConfirmation(
   }, [quoteAmountDetails, refreshQuote]);
 
   return {
-    quoteDetails,
     quoteAmountDetails,
-    fetchQuote,
     updateQuote,
     refreshQuote,
     acceptQuote,
