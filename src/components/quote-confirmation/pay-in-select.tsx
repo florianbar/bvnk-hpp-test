@@ -1,36 +1,21 @@
 "use client";
 
-import { useState } from "react";
-
 import { CURRENCIES_MOCK } from "@/data/payin";
+import Select from "@/components/ui/select";
 
 interface PayInSelectProps {
   onChange: (currency: string) => void;
 }
 
 export default function PayInSelect({ onChange }: PayInSelectProps) {
-  const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
-
-  function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const currency = event.target.value;
-    setSelectedCurrency(currency);
-    onChange(currency);
-  }
-
   return (
     <>
-      <label>Pay with</label>
-      <select onChange={handleChange} value={selectedCurrency || ""}>
-        <option value="" disabled>
-          Select Currency
-        </option>
-
-        {CURRENCIES_MOCK.map((currency) => (
-          <option key={currency.value} value={currency.value}>
-            {currency.label}
-          </option>
-        ))}
-      </select>
+      <label className="block mb-1 font-medium">Pay with</label>
+      <Select
+        options={CURRENCIES_MOCK}
+        placeholder="Select Currency"
+        onChange={onChange}
+      />
     </>
   );
 }
