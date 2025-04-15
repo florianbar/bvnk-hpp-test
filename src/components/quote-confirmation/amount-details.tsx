@@ -40,7 +40,7 @@ export default function AmountDetails(props: AmountDetailsProps) {
         onClick={handleConfirm}
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Confirming..." : "Confirm"}
+        {isSubmitting ? "Processing..." : "Confirm"}
       </button>
     </>
   );
