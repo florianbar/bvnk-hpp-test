@@ -46,6 +46,7 @@ export default function QuotePay({ quote }: QuotePayProps) {
             ),
           },
         ]}
+        showBottomBorder={false}
       />
 
       <div className="my-3">
