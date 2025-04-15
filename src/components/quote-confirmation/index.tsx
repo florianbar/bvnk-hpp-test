@@ -8,6 +8,7 @@ import PayInSelect from "./pay-in-select";
 import AmountDetails from "./amount-details";
 import useQuoteConfirmation from "@/hooks/useQuoteConfirmation";
 import { PayinSummaryResponse } from "@/types/payin";
+import ErrorText from "@/components/ui/error-text";
 
 interface QuoteConfirmationProps {
   uuid: string;
@@ -64,24 +65,12 @@ export default function QuoteConfirmation({
 
       <PayInSelect onChange={handleCurrencyChange} />
 
-      <div className="mt-6">
-        {(updateQuote.isPending || refreshQuote.isPending) && (
-          <p>Updating Quote...</p>
-        )}
+      {(updateQuote.isPending || refreshQuote.isPending) && (
+        <p>Updating Quote...</p>
+      )}
 
-        {updateQuote.isError && (
-          <p className="text-red-500">
-            Updating Quote Error: {updateQuote.error.message}
-          </p>
-        )}
-
-        {refreshQuote.isError && (
-          <p className="text-red-500">
-            Refreshing Quote Error: {refreshQuote.error.message}
-          </p>
-        )}
-
-        {quoteAmountDetails && (
+      {quoteAmountDetails && (
+        <div className="mt-6">
           <AmountDetails
             amount={quoteAmountDetails.amount}
             currency={quoteAmountDetails.currency}
@@ -90,14 +79,26 @@ export default function QuoteConfirmation({
             onSubmit={handleQuoteConfirmation}
             isSubmitting={acceptQuote.isPending}
           />
-        )}
+        </div>
+      )}
 
-        {acceptQuote.isError && (
-          <p className="text-red-500">
-            Accept Quote Error: {acceptQuote.error?.message}
-          </p>
-        )}
-      </div>
+      {updateQuote.isError && (
+        <div className="mt-3">
+          <ErrorText>{updateQuote.error.message}</ErrorText>
+        </div>
+      )}
+
+      {refreshQuote.isError && (
+        <div className="mt-3">
+          <ErrorText>{refreshQuote.error.message}</ErrorText>
+        </div>
+      )}
+
+      {acceptQuote.isError && (
+        <div className="mt-3">
+          <ErrorText>{acceptQuote.error?.message}</ErrorText>
+        </div>
+      )}
     </>
   );
 }
