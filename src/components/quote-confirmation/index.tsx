@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import QuoteDetails from "./quote-details";
@@ -26,13 +26,7 @@ export default function QuoteConfirmation({
   const { quoteAmountDetails, updateQuote, refreshQuote, acceptQuote } =
     useQuoteConfirmation(uuid);
 
-  function handleCurrencyChange(currency: string) {
-    updateQuote.mutate(currency);
-  }
-
-  function handleQuoteConfirmation() {
-    acceptQuote.mutate();
-  }
+  const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
 
   // Redirect to expired page if quote has expired
   useExpiry(initialQuote.expiryDate, () => {
@@ -45,6 +39,15 @@ export default function QuoteConfirmation({
       router.push(getPayinRoutes.pay(uuid));
     }
   }, [acceptQuote.isSuccess, router, uuid]);
+
+  function handleCurrencyChange(currency: string) {
+    setSelectedCurrency(currency);
+    updateQuote.mutate(currency);
+  }
+
+  function handleQuoteConfirmation() {
+    acceptQuote.mutate();
+  }
 
   // useEffect(() => {
   //   const now = Date.now();
@@ -73,16 +76,10 @@ export default function QuoteConfirmation({
 
       <PayInSelect onChange={handleCurrencyChange} />
 
-      {(updateQuote.isPending || refreshQuote.isPending) && (
-        <p>Updating Quote...</p>
-      )}
-
-      {quoteAmountDetails && (
+      {selectedCurrency && (
         <div className="mt-6">
           <AmountDetails
-            amount={quoteAmountDetails.amount}
-            currency={quoteAmountDetails.currency}
-            acceptanceExpiryDate={quoteAmountDetails.acceptanceExpiryDate}
+            details={quoteAmountDetails!}
             isUpdating={updateQuote.isPending || refreshQuote.isPending}
             onSubmit={handleQuoteConfirmation}
             isSubmitting={acceptQuote.isPending}
