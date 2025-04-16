@@ -6,14 +6,14 @@ import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import * as api from "@/utils/api";
 import { PayinSummaryResponse } from "@/types/payin";
 
-interface QuoteAmountDetails {
+export interface QuoteDetails {
   amount: number;
   currency: string;
   acceptanceExpiryDate: number;
 }
 
 interface UseQuoteConfirmationResult {
-  quoteAmountDetails: QuoteAmountDetails | null;
+  quoteDetails: QuoteDetails | null;
   updateQuote: UseMutationResult<PayinSummaryResponse, Error, string>;
   refreshQuote: UseMutationResult<PayinSummaryResponse, Error, void>;
   acceptQuote: UseMutationResult<PayinSummaryResponse, Error, void>;
@@ -22,25 +22,30 @@ interface UseQuoteConfirmationResult {
 export default function useQuoteConfirmation(
   uuid: string
 ): UseQuoteConfirmationResult {
-  const [quoteAmountDetails, setQuoteAmountDetails] =
-    useState<QuoteAmountDetails | null>(null);
+  const [quoteDetails, setQuoteDetails] = useState<QuoteDetails | null>(null);
 
-  function updateQuoteAmountDetails(data: PayinSummaryResponse) {
-    setQuoteAmountDetails({
+  function updateQuoteDetails(data: PayinSummaryResponse) {
+    setQuoteDetails({
       amount: data.paidCurrency.amount,
       currency: data.paidCurrency.currency ?? "",
       acceptanceExpiryDate: data.acceptanceExpiryDate,
     });
   }
 
+  function clearQuoteDetails() {
+    setQuoteDetails(null);
+  }
+
   const updateQuote = useMutation({
     mutationFn: (currency: string) => api.updateQuote(uuid, currency),
-    onSuccess: updateQuoteAmountDetails,
+    onMutate: clearQuoteDetails,
+    onSuccess: updateQuoteDetails,
   });
 
   const refreshQuote = useMutation({
     mutationFn: () => api.refreshQuote(uuid),
-    onSuccess: updateQuoteAmountDetails,
+    onMutate: clearQuoteDetails,
+    onSuccess: updateQuoteDetails,
   });
 
   const acceptQuote = useMutation({
@@ -48,7 +53,7 @@ export default function useQuoteConfirmation(
   });
 
   return {
-    quoteAmountDetails,
+    quoteDetails,
     updateQuote,
     refreshQuote,
     acceptQuote,

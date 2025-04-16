@@ -23,7 +23,7 @@ export default function QuoteConfirmation({
 }: QuoteConfirmationProps) {
   const router = useRouter();
 
-  const { quoteAmountDetails, updateQuote, refreshQuote, acceptQuote } =
+  const { quoteDetails, updateQuote, refreshQuote, acceptQuote } =
     useQuoteConfirmation(uuid);
 
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
@@ -79,7 +79,7 @@ export default function QuoteConfirmation({
       {selectedCurrency && (
         <div className="mt-6">
           <AmountDetails
-            details={quoteAmountDetails!}
+            details={quoteDetails}
             isUpdating={updateQuote.isPending || refreshQuote.isPending}
             onSubmit={handleQuoteConfirmation}
             isSubmitting={acceptQuote.isPending}

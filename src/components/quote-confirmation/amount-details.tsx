@@ -4,13 +4,10 @@ import useExpiryCountdown from "@/hooks/useExpiryCountdown";
 import Button from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import DetailList from "../ui/detail-list";
+import { QuoteDetails } from "@/hooks/useQuoteConfirmation";
 
 interface AmountDetailsProps {
-  details: {
-    amount: number;
-    currency: string;
-    acceptanceExpiryDate: number;
-  };
+  details: QuoteDetails | null;
   isUpdating: boolean;
   onSubmit: () => void;
   isSubmitting: boolean;
@@ -36,7 +33,7 @@ export default function AmountDetails(props: AmountDetailsProps) {
               value: isUpdating ? (
                 <Spinner />
               ) : (
-                `${details.amount} ${details.currency}`
+                `${details?.amount} ${details?.currency}`
               ),
             },
             {
