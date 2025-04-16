@@ -74,7 +74,6 @@ export default function QuotePay({ uuid, quote }: QuotePayProps) {
               value: <CountDown expiryDate={expiryDate} />,
             },
           ]}
-          showBottomBorder={false}
         />
       </div>
     </>
