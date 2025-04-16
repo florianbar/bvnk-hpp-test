@@ -1,7 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-export default function useExpiry(expiryDate: number, onExpiry: () => void) {
+export default function useExpiry(
+  expiryDate: number | null,
+  onExpiry: () => void
+) {
+  const timeoutIdRef = useRef<NodeJS.Timeout>(null);
+
   useEffect(() => {
+    if (timeoutIdRef.current) {
+      clearTimeout(timeoutIdRef.current);
+    }
+
+    if (!expiryDate) {
+      return;
+    }
+
     const now = Date.now();
     const diff = expiryDate - now;
     const delay = Math.floor(diff);
@@ -11,7 +24,12 @@ export default function useExpiry(expiryDate: number, onExpiry: () => void) {
       return;
     }
 
-    const timeoutId = setTimeout(onExpiry, delay);
-    return () => clearTimeout(timeoutId);
+    timeoutIdRef.current = setTimeout(onExpiry, delay);
+
+    return () => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+      }
+    };
   }, [expiryDate, onExpiry]);
 }
