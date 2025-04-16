@@ -9,6 +9,7 @@ import DetailList from "@/components/ui/detail-list";
 import useExpiry from "@/hooks/useExpiry";
 import { getPayinRoutes } from "@/utils/routes";
 import CountDown from "@/components/ui/count-down";
+import QRCodeCanvas from "@/components/ui/qr-code";
 
 interface QuotePayProps {
   uuid: string;
@@ -61,9 +62,11 @@ export default function QuotePay({ uuid, quote }: QuotePayProps) {
         showBottomBorder={false}
       />
 
-      <div className="my-12">
-        QR code
-        {address}
+      <div className="mt-2 mb-4 flex flex-col items-center gap-2">
+        <div>
+          <QRCodeCanvas text={address} />
+        </div>
+        <p className="text-center text-sm">{address}</p>
       </div>
 
       <div className="-mb-3">
