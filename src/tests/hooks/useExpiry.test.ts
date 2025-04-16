@@ -4,11 +4,16 @@ import useExpiry from "@/hooks/useExpiry";
 describe("useExpiry", () => {
   beforeEach(() => {
     jest.useFakeTimers();
+
+    if (typeof global.clearTimeout === "undefined") {
+      global.clearTimeout = jest.fn();
+    }
   });
 
   afterEach(() => {
     jest.clearAllTimers();
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   it("should call onExpiry when time expires", () => {
@@ -50,29 +55,57 @@ describe("useExpiry", () => {
     expect(onExpiry).not.toHaveBeenCalled();
   });
 
-  // it("should recalculate timeout when expiry date changes", () => {
-  //   const onExpiry = jest.fn();
-  //   const initialExpiryTime = Date.now() + 10000;
+  it("should reset timeout when expiry date changes", () => {
+    const onExpiry = jest.fn();
+    const initialExpiryTime = Date.now() + 10000;
 
-  //   const { rerender } = renderHook(
-  //     ({ expiryDate, onExpiry }) => useExpiry(expiryDate, onExpiry),
-  //     {
-  //       initialProps: {
-  //         expiryDate: initialExpiryTime,
-  //         onExpiry,
-  //       },
-  //     }
-  //   );
+    const { rerender } = renderHook(
+      ({ expiryDate, onExpiry }) => useExpiry(expiryDate, onExpiry),
+      {
+        initialProps: {
+          expiryDate: initialExpiryTime,
+          onExpiry,
+        },
+      }
+    );
 
-  //   // Change expiry time to 5 seconds from now
-  //   const newExpiryTime = Date.now() + 5000;
-  //   rerender({ expiryDate: newExpiryTime, onExpiry });
+    // Change expiry time to 5 seconds from now
+    const newExpiryTime = Date.now() + 5000;
+    rerender({ expiryDate: newExpiryTime, onExpiry });
 
-  //   // Advance time past new expiry
-  //   act(() => {
-  //     jest.advanceTimersByTime(5001);
-  //   });
+    // Advance time past new expiry
+    act(() => {
+      jest.advanceTimersByTime(5001);
+    });
 
-  //   expect(onExpiry).toHaveBeenCalledTimes(1);
-  // });
+    expect(onExpiry).toHaveBeenCalledTimes(1);
+  });
+
+  it("should not set a timeout if expiry date is null", () => {
+    const onExpiry = jest.fn();
+    const { result } = renderHook(() => useExpiry(null, onExpiry));
+
+    expect(result.current).toBeUndefined();
+    expect(onExpiry).not.toHaveBeenCalled();
+  });
+
+  it("should clear current timeout if expiry date is null", () => {
+    const onExpiry = jest.fn();
+    const expiryTime = Date.now() + 10000;
+    const { rerender } = renderHook(
+      ({ expiryDate, onExpiry }) => useExpiry(expiryDate, onExpiry),
+      {
+        initialProps: {
+          expiryDate: expiryTime,
+          onExpiry,
+        },
+      }
+    );
+
+    // Set expiry date to null
+    // @ts-expect-error: null is a valid input for testing edge case
+    rerender({ expiryDate: null, onExpiry });
+
+    expect(onExpiry).not.toHaveBeenCalled();
+  });
 });
