@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-import { getRemainingTime } from "@/utils/time";
+import { getRemainingTime, getDisplayTimeFromSeconds } from "@/utils/time";
 
 interface CountDownProps {
   expiryDate: number;
@@ -41,5 +41,5 @@ export default function CountDown({ expiryDate }: CountDownProps) {
     };
   }, [expiryDate]);
 
-  return <div>{remainingTime}</div>;
+  return <div>{getDisplayTimeFromSeconds(remainingTime / 1000)}</div>;
 }
