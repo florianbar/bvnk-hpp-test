@@ -4,17 +4,25 @@ import Button from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import DetailList from "@/components/ui/detail-list";
 import CountDown from "@/components/ui/count-down";
-import { QuoteDetails } from "@/hooks/useQuoteConfirmation";
 
 interface AmountDetailsProps {
-  details: QuoteDetails | null;
+  amount?: number;
+  currency?: string;
+  acceptanceExpiryDate?: number;
   isUpdating: boolean;
   onSubmit: () => void;
   isSubmitting: boolean;
 }
 
 export default function AmountDetails(props: AmountDetailsProps) {
-  const { details, isUpdating, onSubmit, isSubmitting } = props;
+  const {
+    amount,
+    currency,
+    acceptanceExpiryDate,
+    isUpdating,
+    onSubmit,
+    isSubmitting,
+  } = props;
 
   function handleConfirm() {
     onSubmit();
@@ -27,18 +35,14 @@ export default function AmountDetails(props: AmountDetailsProps) {
           data={[
             {
               key: "Amount due",
-              value: isUpdating ? (
-                <Spinner />
-              ) : (
-                `${details?.amount} ${details?.currency}`
-              ),
+              value: isUpdating ? <Spinner /> : `${amount} ${currency}`,
             },
             {
               key: "Quoted price expires in",
               value: isUpdating ? (
                 <Spinner />
               ) : (
-                <CountDown expiryDate={details?.acceptanceExpiryDate || 0} />
+                <CountDown expiryDate={acceptanceExpiryDate || 0} />
               ),
             },
           ]}

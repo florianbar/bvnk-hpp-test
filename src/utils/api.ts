@@ -18,26 +18,6 @@ export async function fetchQuote(uuid: string): Promise<PayinSummaryResponse> {
   return await response.json();
 }
 
-export async function refreshQuote(
-  uuid: string
-): Promise<PayinSummaryResponse> {
-  let url = process.env.NEXT_PUBLIC_BVNK_API_URL || "";
-  url += `/${uuid}/summary`;
-
-  const response = await fetch(url, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to refresh quote");
-  }
-
-  return await response.json();
-}
-
 export async function updateQuote(
   uuid: string,
   currency: string

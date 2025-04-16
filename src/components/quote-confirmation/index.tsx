@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
 import QuoteDetails from "./quote-details";
 import PayInSelect from "./pay-in-select";
 import AmountDetails from "./amount-details";
-import useQuoteConfirmation from "@/hooks/useQuoteConfirmation";
 import { PayinSummaryResponse } from "@/types/payin";
 import ErrorText from "@/components/ui/error-text";
 import useExpiry from "@/hooks/useExpiry";
 import { getPayinRoutes } from "@/utils/routes";
+import * as api from "@/utils/api";
 
 interface QuoteConfirmationProps {
   uuid: string;
@@ -23,10 +24,27 @@ export default function QuoteConfirmation({
 }: QuoteConfirmationProps) {
   const router = useRouter();
 
-  const { quoteDetails, updateQuote, refreshQuote, acceptQuote } =
-    useQuoteConfirmation(uuid);
-
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
+
+  const {
+    mutate: updateQuote,
+    data: updateQuoteData,
+    isPending: updateQuoteIsPending,
+    isError: updateQuoteHasError,
+    error: updateQuoteError,
+  } = useMutation({
+    mutationFn: (currency: string) => api.updateQuote(uuid, currency),
+  });
+
+  const {
+    mutate: acceptQuote,
+    isPending: acceptQuoteIsPending,
+    isSuccess: acceptQuoteIsSuccess,
+    isError: acceptQuoteHasError,
+    error: acceptQuoteError,
+  } = useMutation({
+    mutationFn: () => api.acceptQuote(uuid),
+  });
 
   // Redirect to expired page if quote has expired
   useExpiry(initialQuote.expiryDate, () => {
@@ -34,24 +52,25 @@ export default function QuoteConfirmation({
   });
 
   // Refresh quote if acceptance has expired
-  useExpiry(quoteDetails?.acceptanceExpiryDate || null, () => {
-    refreshQuote.mutate();
+  useExpiry(updateQuoteData?.acceptanceExpiryDate || null, () => {
+    if (!selectedCurrency) return;
+    updateQuote(selectedCurrency);
   });
 
   // Redirect to payment page if quote has been accepted
   useEffect(() => {
-    if (acceptQuote.isSuccess) {
+    if (acceptQuoteIsSuccess) {
       router.push(getPayinRoutes.pay(uuid));
     }
-  }, [acceptQuote.isSuccess, router, uuid]);
+  }, [acceptQuoteIsSuccess, router, uuid]);
 
   function handleCurrencyChange(currency: string) {
     setSelectedCurrency(currency);
-    updateQuote.mutate(currency);
+    updateQuote(currency);
   }
 
   function handleQuoteConfirmation() {
-    acceptQuote.mutate();
+    acceptQuote();
   }
 
   return (
@@ -71,29 +90,25 @@ export default function QuoteConfirmation({
       {selectedCurrency && (
         <div className="mt-6">
           <AmountDetails
-            details={quoteDetails}
-            isUpdating={updateQuote.isPending || refreshQuote.isPending}
+            amount={updateQuoteData?.paidCurrency.amount}
+            currency={updateQuoteData?.paidCurrency.currency || ""}
+            acceptanceExpiryDate={updateQuoteData?.acceptanceExpiryDate}
+            isUpdating={updateQuoteIsPending}
             onSubmit={handleQuoteConfirmation}
-            isSubmitting={acceptQuote.isPending}
+            isSubmitting={acceptQuoteIsPending}
           />
         </div>
       )}
 
-      {updateQuote.isError && (
+      {updateQuoteHasError && (
         <div className="mt-3">
-          <ErrorText>{updateQuote.error.message}</ErrorText>
+          <ErrorText>{updateQuoteError.message}</ErrorText>
         </div>
       )}
 
-      {refreshQuote.isError && (
+      {acceptQuoteHasError && (
         <div className="mt-3">
-          <ErrorText>{refreshQuote.error.message}</ErrorText>
-        </div>
-      )}
-
-      {acceptQuote.isError && (
-        <div className="mt-3">
-          <ErrorText>{acceptQuote.error?.message}</ErrorText>
+          <ErrorText>{acceptQuoteError.message}</ErrorText>
         </div>
       )}
     </>
