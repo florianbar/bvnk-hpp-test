@@ -1,9 +1,9 @@
 "use client";
 
-import useExpiryCountdown from "@/hooks/useExpiryCountdown";
 import Button from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
-import DetailList from "../ui/detail-list";
+import DetailList from "@/components/ui/detail-list";
+import CountDown from "@/components/ui/count-down";
 import { QuoteDetails } from "@/hooks/useQuoteConfirmation";
 
 interface AmountDetailsProps {
@@ -15,9 +15,6 @@ interface AmountDetailsProps {
 
 export default function AmountDetails(props: AmountDetailsProps) {
   const { details, isUpdating, onSubmit, isSubmitting } = props;
-
-  // const { timeRemaining } = useExpiryCountdown(details.acceptanceExpiryDate);
-  const { timeRemaining } = useExpiryCountdown(30000);
 
   function handleConfirm() {
     onSubmit();
@@ -41,7 +38,7 @@ export default function AmountDetails(props: AmountDetailsProps) {
               value: isUpdating ? (
                 <Spinner />
               ) : (
-                `${Math.floor(timeRemaining / 1000)}`
+                <CountDown expiryDate={details?.acceptanceExpiryDate || 0} />
               ),
             },
           ]}

@@ -3,11 +3,12 @@
 import { useRouter } from "next/navigation";
 
 import { PayinSummaryResponse } from "@/types/payin";
-import CopyLink from "../ui/copy-link";
+import CopyLink from "@/components/ui/copy-link";
 import { getMaskedWalletAddress } from "@/utils/wallet-address";
-import DetailList from "../ui/detail-list";
+import DetailList from "@/components/ui/detail-list";
 import useExpiry from "@/hooks/useExpiry";
 import { getPayinRoutes } from "@/utils/routes";
+import CountDown from "@/components/ui/count-down";
 
 interface QuotePayProps {
   uuid: string;
@@ -67,7 +68,13 @@ export default function QuotePay({ uuid, quote }: QuotePayProps) {
 
       <div className="-mb-3">
         <DetailList
-          data={[{ key: "Time left to pay", value: `${expiryDate}` }]}
+          data={[
+            {
+              key: "Time left to pay",
+              value: <CountDown expiryDate={expiryDate} />,
+            },
+          ]}
+          showBottomBorder={false}
         />
       </div>
     </>
