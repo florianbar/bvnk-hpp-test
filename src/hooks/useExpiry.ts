@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getRemainingTime } from "@/utils/time";
 
 export default function useExpiry(
   expiryDate: number | null,
@@ -15,9 +16,7 @@ export default function useExpiry(
       return;
     }
 
-    const now = Date.now();
-    const diff = expiryDate - now;
-    const delay = Math.floor(diff);
+    const delay = getRemainingTime(expiryDate);
 
     if (delay <= 0) {
       onExpiry();
