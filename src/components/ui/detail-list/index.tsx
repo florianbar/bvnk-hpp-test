@@ -21,7 +21,7 @@ export default function DetailList({
       {data.map(({ key, value }: Detail, index: number) => (
         <div
           key={index}
-          className="flex justify-between border-t border-bvnk-light py-4"
+          className="flex justify-between items-center border-t border-bvnk-light py-4"
         >
           <div className="text-bvnk-gray">{key}</div>
           <div className="text-bvnk-black font-medium">{value}</div>
