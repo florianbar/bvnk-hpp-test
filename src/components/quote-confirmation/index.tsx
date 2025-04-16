@@ -33,6 +33,11 @@ export default function QuoteConfirmation({
     router.push(getPayinRoutes.expired(uuid));
   });
 
+  // Refresh quote if acceptance has expired
+  useExpiry(quoteDetails?.acceptanceExpiryDate || null, () => {
+    refreshQuote.mutate();
+  });
+
   // Redirect to payment page if quote has been accepted
   useEffect(() => {
     if (acceptQuote.isSuccess) {
@@ -48,19 +53,6 @@ export default function QuoteConfirmation({
   function handleQuoteConfirmation() {
     acceptQuote.mutate();
   }
-
-  // useEffect(() => {
-  //   const now = Date.now();
-
-  //   if (quoteAmountDetails && quoteAmountDetails.acceptanceExpiryDate > now) {
-  //     const difference = quoteAmountDetails.acceptanceExpiryDate - now;
-  //     const delay = Math.floor(difference);
-
-  //     setTimeout(() => {
-  //       refreshQuote.mutate();
-  //     }, delay);
-  //   }
-  // }, [quoteAmountDetails, refreshQuote]);
 
   return (
     <>
