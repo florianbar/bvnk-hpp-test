@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { getRemainingTime, getDisplayTimeFromSeconds } from "@/utils/time";
 
 interface CountDownProps {
-  expiryDate: number;
+  expiryDate?: number | null;
 }
 
 export default function CountDown({ expiryDate }: CountDownProps) {
@@ -36,7 +36,7 @@ export default function CountDown({ expiryDate }: CountDownProps) {
 
     return () => {
       if (intervalIdRef.current) {
-        clearTimeout(intervalIdRef.current);
+        clearInterval(intervalIdRef.current);
       }
     };
   }, [expiryDate]);
