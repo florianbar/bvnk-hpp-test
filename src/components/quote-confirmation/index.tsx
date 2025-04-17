@@ -12,6 +12,7 @@ import ErrorText from "@/components/ui/error-text";
 import useExpiry from "@/hooks/useExpiry";
 import { getPayinRoutes } from "@/utils/routes";
 import * as api from "@/utils/api";
+import Button from "@/components/ui/button";
 
 interface QuoteConfirmationProps {
   uuid: string;
@@ -87,23 +88,41 @@ export default function QuoteConfirmation({
 
       <PayInSelect onChange={handleCurrencyChange} />
 
-      {selectedCurrency && (
+      {selectedCurrency && !updateQuoteHasError && (
         <div className="mt-6">
-          <AmountDetails
-            amount={updateQuoteData?.paidCurrency.amount}
-            currency={updateQuoteData?.paidCurrency.currency || ""}
-            acceptanceExpiryDate={updateQuoteData?.acceptanceExpiryDate}
-            isUpdating={updateQuoteIsPending}
-            onSubmit={handleQuoteConfirmation}
-            isSubmitting={acceptQuoteIsPending}
-          />
+          <div className="mb-6">
+            <AmountDetails
+              amount={updateQuoteData?.paidCurrency.amount}
+              currency={updateQuoteData?.paidCurrency.currency || ""}
+              acceptanceExpiryDate={updateQuoteData?.acceptanceExpiryDate}
+              isUpdating={updateQuoteIsPending}
+            />
+          </div>
+
+          <Button
+            onClick={handleQuoteConfirmation}
+            disabled={acceptQuoteIsPending}
+          >
+            {acceptQuoteIsPending ? "Processing..." : "Confirm"}
+          </Button>
         </div>
       )}
 
       {updateQuoteHasError && (
-        <div className="mt-3">
-          <ErrorText>{updateQuoteError.message}</ErrorText>
-        </div>
+        <>
+          <div className="my-3">
+            <ErrorText>{updateQuoteError.message}</ErrorText>
+          </div>
+
+          {selectedCurrency && (
+            <Button
+              onClick={() => updateQuote(selectedCurrency)}
+              disabled={updateQuoteIsPending}
+            >
+              {updateQuoteIsPending ? "Processing..." : "Retry"}
+            </Button>
+          )}
+        </>
       )}
 
       {acceptQuoteHasError && (
