@@ -1,7 +1,7 @@
 export interface PayinPageProps {
-  params: {
+  params: Promise<{
     uuid: string;
-  };
+  }>;
 }
 
 export interface PayinSummaryResponse {
