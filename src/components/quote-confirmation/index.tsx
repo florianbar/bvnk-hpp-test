@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 
@@ -40,11 +40,14 @@ export default function QuoteConfirmation({
   const {
     mutate: acceptQuote,
     isPending: acceptQuoteIsPending,
-    isSuccess: acceptQuoteIsSuccess,
     isError: acceptQuoteHasError,
     error: acceptQuoteError,
   } = useMutation({
     mutationFn: () => api.acceptQuote(uuid),
+    onSuccess: () => {
+      // Redirect to payment page if quote has been accepted
+      router.push(getPayinRoutes.pay(uuid));
+    },
   });
 
   // Redirect to expired page if quote has expired
@@ -57,13 +60,6 @@ export default function QuoteConfirmation({
     if (!selectedCurrency) return;
     updateQuote(selectedCurrency);
   });
-
-  // Redirect to payment page if quote has been accepted
-  useEffect(() => {
-    if (acceptQuoteIsSuccess) {
-      router.push(getPayinRoutes.pay(uuid));
-    }
-  }, [acceptQuoteIsSuccess, router, uuid]);
 
   function handleCurrencyChange(currency: string) {
     setSelectedCurrency(currency);
